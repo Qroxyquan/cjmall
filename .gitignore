@@ -1,6 +1,6 @@
 *.class
 #packpage file
-*war
+*.war
 *.ear
 
 #kdiff3 ingore
