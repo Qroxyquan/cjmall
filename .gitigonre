@@ -1,0 +1,30 @@
+*.class
+#packpage file
+*war
+*.ear
+
+#kdiff3 ingore
+*.orig
+
+#maven ignore
+
+target/
+# ecplice ingore
+.seeting/
+.project
+.classpatch
+
+#idea ignore
+.idea/
+/idea/
+*.ipr
+*.iml
+*.iws
+#tem file
+*.log
+*diff
+*path
+*tem
+#system ingore
+.Ds_Store
+Thumbs.db
