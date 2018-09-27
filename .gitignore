@@ -28,3 +28,4 @@ target/
 #system ingore
 .Ds_Store
 Thumbs.db
+!/src/main/java/
