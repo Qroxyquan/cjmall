@@ -29,3 +29,4 @@ target/
 .Ds_Store
 Thumbs.db
 !/src/main/java/
+/out
