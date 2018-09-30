@@ -8,7 +8,7 @@
 	</settings>
 	
 	<typeAliases>
-		<package name="com.atguigu.crud.bean"/>
+		<package name="com.qroxy.pojo"/>
 	</typeAliases>
 	
 	<plugins>
