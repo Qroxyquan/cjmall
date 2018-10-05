@@ -178,5 +178,28 @@
   </update>
 
 
+<select id="selectList" resultMap="BaseResultMap">
 
+  select
+  <include refid="Base_Column_List"/>
+  from mmall_product
+  order by  id asc
+--   注意不要添加分号；不然分页插件分页时会报错，分页插件会自动添加分号
+</select>
+  <select id="selectByNameAndProductId" resultMap="BaseResultMap" parameterType="map">
+
+    select
+    <include refid="Base_Column_List"/>
+    <where>
+      <if test="productName != null">
+
+        and name like #{productName}
+      </if>
+      <if test="productId != null">
+
+        and id=#{productId}
+      </if>
+    </where>
+
+  </select>
 </mapper>

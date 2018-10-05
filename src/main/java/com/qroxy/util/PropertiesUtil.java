@@ -16,11 +16,13 @@ public class PropertiesUtil {
     private static Logger logger = LoggerFactory.getLogger(PropertiesUtil.class);
 
     private static Properties props;
-
+//静态块优于普通代码块，普通代码块优于构造器代码块！静态代码块在系统启动时便会启动
     static {
+        //静态代码块，类加载器启动时执行一次，一般用于初始化静态变量
         String fileName = "mmall.properties";
         props = new Properties();
         try {
+            //普通代码块
             props.load(new InputStreamReader(PropertiesUtil.class.getClassLoader().getResourceAsStream(fileName),"UTF-8"));
         } catch (IOException e) {
             logger.error("配置文件读取异常",e);

@@ -29,5 +29,9 @@ target/
 .Ds_Store
 Thumbs.db
 !/src/main/java/
-/out
-src/main/java/com/qroxy/vo/
+/out/
+
+!/src/
+
+/.settings/
+!/src/main/java/com/qroxy/vo/
