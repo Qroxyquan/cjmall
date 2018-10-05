@@ -10,7 +10,7 @@
 
 target/
 # ecplice ingore
-.seeting/
+.settings/
 .project
 .classpatch
 
@@ -30,3 +30,4 @@ target/
 Thumbs.db
 !/src/main/java/
 /out
+src/main/java/com/qroxy/vo/
