@@ -61,21 +61,27 @@
     </bean>
 
     <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <!--直接该方式注入mybatis全局配置文件会报错，原因未知！引用插件方式可以通过spring中配置插件方式来避免错误-->
+        <!--<property name="configLocation" value="classpath:mybatis-config.xml"></property>-->
         <property name="dataSource" ref="dataSource"/>
         <property name="mapperLocations" value="classpath:mapper/*Mapper.xml"></property>
-        <!--<property name="configLocation" value="mybatis-config.xml"></property>-->
-        <!-- 分页插件 -->
-        <!--<property name="plugins">-->
-            <!--<array>-->
-                <!--<bean class="com.github.pagehelper.PageHelper">-->
-                    <!--<property name="properties">-->
-                        <!--<value>-->
-                            <!--dialect=mysql-->
-                        <!--</value>-->
-                    <!--</property>-->
-                <!--</bean>-->
-            <!--</array>-->
-        <!--</property>-->
+
+
+        <!-- 分页插件 ,Spring 配置文件中配置拦截器插件,看官网介绍-->
+        <property name="plugins">
+            <array>
+                <bean class="com.github.pagehelper.PageHelper">
+                    <property name="properties">
+                        <value>
+                            dialect=mysql
+                            reasonable=true
+                        </value>
+                    </property>
+
+
+                </bean>
+            </array>
+        </property>
 
     </bean>
 

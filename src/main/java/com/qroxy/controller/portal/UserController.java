@@ -37,7 +37,7 @@ public class UserController {
      */
     @Autowired
 
-    private static IUserService iUserService;
+    private  IUserService iUserService;
 
 
 //    public static void main(String[] args) {

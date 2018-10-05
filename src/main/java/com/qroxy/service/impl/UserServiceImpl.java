@@ -258,4 +258,24 @@ public class UserServiceImpl implements IUserService {
          user.setPassword(StringUtils.EMPTY);
         return ServerRespond.createBySuccess("查询成功",user);
     }
+    //backend
+    /**
+    *@desc:校验是否管理员
+    *
+    *@author:Qroxy
+    *
+    *@date:2018/10/3 8:45 PM
+    *
+    *@param:[user]
+    *
+    *@type:com.qroxy.common.ServerRespond
+    *
+    */
+    @Override
+    public ServerRespond checkAdminRole(User user){
+        if (user!=null&&user.getRole().intValue()==Const.Role.ROLE_ADMIN){
+            return ServerRespond.createBySuccess();
+        }
+        return ServerRespond.createByError();
+    }
 }
