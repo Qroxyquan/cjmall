@@ -3,7 +3,16 @@ package com.qroxy.util;
 import java.security.MessageDigest;
 
 /**
- * Created by geely
+ *@desc:MD5密码加密工具类
+ *
+ *@author:Qroxy
+ *
+ *@date:2018/10/7 7:03 PM
+ *
+ *@param:
+ *
+ *@type:
+ *
  */
 public class MD5Util {
 

@@ -9,8 +9,18 @@ import java.io.InputStreamReader;
 import java.util.Properties;
 
 /**
- * Created by geely
+ *@desc:用于读取mmall配置文件信息
+ *
+ *@author:Qroxy
+ *
+ *@date:2018/10/7 7:02 PM
+ *
+ *@param:
+ *
+ *@type:
+ *
  */
+
 public class PropertiesUtil {
 
     private static Logger logger = LoggerFactory.getLogger(PropertiesUtil.class);

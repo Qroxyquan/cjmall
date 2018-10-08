@@ -3,12 +3,14 @@ package com.qroxy.service.impl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Lists;
+import com.qroxy.common.Const;
 import com.qroxy.common.ResponseCode;
 import com.qroxy.common.ServerRespond;
 import com.qroxy.dao.CategoryMapper;
 import com.qroxy.dao.ProductMapper;
 import com.qroxy.pojo.Category;
 import com.qroxy.pojo.Product;
+import com.qroxy.service.ICategoryService;
 import com.qroxy.service.IProductService;
 import com.qroxy.util.DateTimeUtil;
 import com.qroxy.util.PropertiesUtil;
@@ -19,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -32,6 +35,8 @@ public class ProductServiceImpl implements IProductService {
     private ProductMapper productMapper;
     @Autowired
     private CategoryMapper categoryMapper;
+    @Autowired
+    private ICategoryService iCategoryService;
     /**
      * @desc:增加或更新产品实现
      * @author:Qroxy
@@ -154,6 +159,7 @@ public class ProductServiceImpl implements IProductService {
         //填充自己的sql查询逻辑
         //pageHelper-收尾
         PageHelper.startPage(pageNum,pageSize);
+
         List<Product> productList=productMapper.selectList();
 
         List<ProductListVo> productListVoList=Lists.newArrayList();
@@ -249,11 +255,12 @@ public class ProductServiceImpl implements IProductService {
     @Override
     public ServerRespond<PageInfo> searchProduct(String productName,Integer productId,int pageNum,int pageSize){
 
-        PageHelper.startPage(pageNum,pageSize);
+
         if (StringUtils.isNotBlank(productName)){
             productName=new  StringBuilder().append("%").append(productName).append("%").toString();
 
         }
+        PageHelper.startPage(pageNum, pageSize);
         List<Product> productList=productMapper.selectByNameAndProductId(productName,productId);
         List<ProductListVo> productListVoList=Lists.newArrayList();
         for(Product productItem:productList){
@@ -264,5 +271,86 @@ public class ProductServiceImpl implements IProductService {
         pageResult.setList(productListVoList);
         return  ServerRespond.createBySuccess(pageResult);
     }
+
+    /**
+     * @desc:前台查询产品信息
+     * @author:Qroxy
+     * @date:2018/10/7 7:20 PM
+     * @param:[productId]
+     * @type:com.qroxy.common.ServerRespond<com.qroxy.vo.ProductDetaiVo>
+     */
+    @Override
+    public ServerRespond<ProductDetaiVo> getProductDetail(Integer productId) {
+        if (productId == null) {
+            ServerRespond.createByErrorMessage(ResponseCode.ILLEGAL_ARGUMENT.getCode(), ResponseCode.ILLEGAL_ARGUMENT.getDesc());
+
+        }
+        Product product = productMapper.selectByPrimaryKey(productId);
+        if (product == null) {
+            return ServerRespond.createByErrorMessage("产品已经下架或已经删除");
+
+        }
+
+        if (product.getStatus() != Const.productStatusEnum.ON_SALE.getCode()) {
+            return ServerRespond.createByErrorMessage("产品已经下架或已经删除");
+        }
+        ProductDetaiVo productDetaiVo = assembleProductDetailVo(product);
+
+        return ServerRespond.createBySuccess(productDetaiVo);
+
+
+    }
+
+    /**
+     * @desc:前台根据关键字或categoryId搜索产品
+     * @author:Qroxy
+     * @date:2018/10/8 5:49 PM
+     * @param:[keyword, categoryId, pageNum, pageSize, orderBy]
+     * @type:com.qroxy.common.ServerRespond<com.github.pagehelper.PageInfo>
+     */
+    @Override
+    public ServerRespond<PageInfo> getProductByKeywordOrCategoryId(String keyword, Integer categoryId, int pageNum, int pageSize, String orderBy) {
+
+        if (StringUtils.isBlank(keyword) && categoryId == null) {
+            return ServerRespond.createByErrorMessage(ResponseCode.ILLEGAL_ARGUMENT.getCode(), ResponseCode.ILLEGAL_ARGUMENT.getDesc());
+        }
+        List<Integer> categoryIdList = new ArrayList<Integer>();
+
+        if (categoryId != null) {
+            Category category = categoryMapper.selectByPrimaryKey(categoryId);
+            if (category == null && StringUtils.isBlank(keyword)) {
+                //没有该分类，并且还没有关键字，返回一个空结果集
+                PageHelper.startPage(pageNum, pageSize);
+                List<ProductListVo> productListVoList = Lists.newArrayList();
+                PageInfo pageInfo = new PageInfo(productListVoList);
+                return ServerRespond.createBySuccess(pageInfo);
+            }
+            categoryIdList = iCategoryService.selectCategoryAndChilrenById(category.getId()).getData();
+        }
+        if (StringUtils.isNotBlank(keyword)) {
+            keyword = new StringBuilder().append("%").append(keyword).append("%").toString();
+        }
+        //排序处理
+        PageHelper.startPage(pageNum, pageSize);
+
+        if (StringUtils.isNotBlank(orderBy)) {
+            if (Const.ProductListOrderBy.PRICE_ASC_DESC.contains(orderBy)) {
+                String[] orderByArray = orderBy.split("_");
+                PageHelper.orderBy(orderByArray[0] + " " + orderByArray[1]);
+            }
+        }
+        List<Product> productList = productMapper.selectByNameAndCategoryIds(StringUtils.isBlank(keyword) ? null : keyword, categoryIdList.size() == 0 ? null : categoryIdList);
+        List<ProductListVo> productListVoList = Lists.newArrayList();
+        for (Product product : productList) {
+            ProductListVo productListVo = assembleProductListVo(product);
+            productListVoList.add(productListVo);
+        }
+        PageInfo pageInfo = new PageInfo(productList);
+        pageInfo.setList(productListVoList);
+        return ServerRespond.createBySuccess(pageInfo);
+    }
+
+
+
 
 }
