@@ -177,11 +177,68 @@
     where id = #{id,jdbcType=INTEGER}
   </update>
 
+<delete id="deleteByShippingIdAndUserId" parameterType="map">
+  delete
+  from mmall_shipping
+  where user_id=#{userId}
+  and
+  id=#{shippingId}
+</delete>
 
 
 
+<update id="updateByUserId" parameterType="com.qroxy.pojo.Shipping" >
+  update mmall_shipping
+  <set >
 
+    <if test="receiverName != null" >
+      receiver_name = #{receiverName,jdbcType=VARCHAR},
+    </if>
+    <if test="receiverPhone != null" >
+      receiver_phone = #{receiverPhone,jdbcType=VARCHAR},
+    </if>
+    <if test="receiverMobile != null" >
+      receiver_mobile = #{receiverMobile,jdbcType=VARCHAR},
+    </if>
+    <if test="receiverProvince != null" >
+      receiver_province = #{receiverProvince,jdbcType=VARCHAR},
+    </if>
+    <if test="receiverCity != null" >
+      receiver_city = #{receiverCity,jdbcType=VARCHAR},
+    </if>
+    <if test="receiverDistrict != null" >
+      receiver_district = #{receiverDistrict,jdbcType=VARCHAR},
+    </if>
+    <if test="receiverAddress != null" >
+      receiver_address = #{receiverAddress,jdbcType=VARCHAR},
+    </if>
+    <if test="receiverZip != null" >
+      receiver_zip = #{receiverZip,jdbcType=VARCHAR},
+    </if>
+    <if test="createTime != null" >
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+    </if>
+    <if test="updateTime != null" >
+      update_time = now(),
+    </if>
+  </set>
+  where id = #{id,jdbcType=INTEGER}
+  and user_id=#{userId,jdbcType=INTEGER}
+</update>
 
+<select id="selectByShippingIdUserId" parameterType="map" resultMap="BaseResultMap">
 
+  select
+  <include refid="Base_Column_List"/>
+  from mmall_shipping
+  where id=#{shippingId}
+  and  user_id=#{userId}
+</select>
+  <select id="selectByUserId" parameterType="map" resultMap="BaseResultMap">
 
+    select
+    <include refid="Base_Column_List"/>
+    from  mmall_shipping
+    where user_id=#{userId}
+  </select>
 </mapper>
