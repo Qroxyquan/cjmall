@@ -43,6 +43,11 @@ public class Cart {
         return userId;
     }
 
+    @Override
+    public String toString() {
+        return super.toString();
+    }
+
     public void setUserId(Integer userId) {
         this.userId = userId;
     }

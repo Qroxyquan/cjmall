@@ -106,30 +106,74 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.qroxy.pojo.Cart" >
-    update mmall_cart
-    set user_id = #{userId,jdbcType=INTEGER},
-      product_id = #{productId,jdbcType=INTEGER},
-      quantity = #{quantity,jdbcType=INTEGER},
-      checked = #{checked,jdbcType=INTEGER},
-      create_time = #{createTime,jdbcType=TIMESTAMP},
-      update_time = now()
-    where id = #{id,jdbcType=INTEGER}
-  </update>
 
 
+    <select id="selectCartByUserIdAndProductId" parameterType="map" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from mmall_cart
+
+        where user_id=#{userId}
+        and
+        product_id=#{priductId}
+    </select>
+
+    <select id="selectCartByserId" parameterType="int" resultMap="BaseResultMap">
+
+        select
+        <include refid="Base_Column_List"/>
+        from mmall_cart
+        where user_id=#{userId}
+
+    </select>
+
+    <select id="selectCartProdutCheckedStatusByUserId" parameterType="int" resultType="int">
+
+  select
+  count(1)
+  from
+  mmall_cart
+  where checked=0
+  and user_id=#{userId}
+</select>
+
+    <delete id="deleteByUserIdProductId" parameterType="map">
+
+        delete from
+        mmall_cart
+        where user_id=#{userId}
+        <if test="priductIdList!=null">
+
+            and product_id in
+            <foreach collection="priductIdList" item="item" index="index" open="(" separator="," close=")">
+                #{item}
+
+            </foreach>
+        </if>
+
+    </delete>
 
 
+    <update id="checkOrUncheckAllProduct" parameterType="map">
+  update mmall_cart
+  set  checked=#{checked},
+  update_time=now()
+  where user_id=#{userId}
+</update>
 
+    <update id="checkOrUncheckProduct" parameterType="map">
 
+  update mmall_cart
+  set  checked=#{checked},
+  update_time=now()
+  where user_id=#{userId}
+  and product_id=#{productId}
 
+</update>
 
-
-
-
-
-
-
-
+    <select id="selectCartProductCount" parameterType="int" resultType="int">
+  select nullif (sum(quantity),0) as  count from mmall_cart where
+  user_id=#{userId}
+</select>
 
 </mapper>

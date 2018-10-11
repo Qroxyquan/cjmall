@@ -23,6 +23,14 @@ public class Const {
 
     }
 
+    public interface Cart {
+
+        int CHECKED = 1;//购物车选中状态
+        int UNCHECKED = 0;//购物车未选中状态
+        String LIMIT_NUM_FAIL = "LIMIT_NUM_FAIL";
+        String LIMIT_NUM_SUCCESS = "LIMIT_NUM_SUCCESS";
+
+    }
     public enum productStatusEnum {
         ON_SALE(1, "在线");
 
@@ -50,7 +58,13 @@ public class Const {
     }
 
     public interface ProductListOrderBy {
-        //        使用set不使用list的原因是因为，set的时间复杂度为O（1）。而list为O(n)
+        /**
+         * @desc:使用set不使用list的原因是因为，set的时间复杂度为O（1）。而list为O(n)
+         * @author:Qroxy
+         * @date:2018/10/10 12:28 PM
+         * @param:
+         * @type:
+         */
         Set<String> PRICE_ASC_DESC = Sets.newHashSet("price_desc", "price_asc");
 
     }

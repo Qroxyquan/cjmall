@@ -127,6 +127,11 @@ public class Product {
         this.status = status;
     }
 
+    @Override
+    public String toString() {
+        return super.toString();
+    }
+
     public Date getCreateTime() {
         return createTime;
     }
