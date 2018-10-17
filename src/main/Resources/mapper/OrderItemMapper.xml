@@ -4,6 +4,7 @@
   <resultMap id="BaseResultMap" type="com.qroxy.pojo.OrderItem" >
     <constructor >
       <idArg column="id" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="user_id" jdbcType="INTEGER" javaType="java.lang.Integer"/>
       <arg column="order_no" jdbcType="BIGINT" javaType="java.lang.Long" />
       <arg column="product_id" jdbcType="INTEGER" javaType="java.lang.Integer" />
       <arg column="product_name" jdbcType="VARCHAR" javaType="java.lang.String" />
@@ -13,7 +14,7 @@
       <arg column="total_price" jdbcType="DECIMAL" javaType="java.math.BigDecimal" />
       <arg column="create_time" jdbcType="TIMESTAMP" javaType="java.util.Date" />
       <arg column="update_time" jdbcType="TIMESTAMP" javaType="java.util.Date" />
-      <arg column="user_id" jdbcType="INTEGER" javaType="java.lang.Integer" />
+
     </constructor>
   </resultMap>
   <sql id="Base_Column_List" >
@@ -164,7 +165,13 @@
     where id = #{id,jdbcType=INTEGER}
   </update>
 
-
+  <select id="getByOrderNoUserId" parameterType="map" resultMap="BaseResultMap">
+    SELECT
+    <include refid="Base_Column_List"/>
+    from mmall_order_item
+    where order_no = #{orderNo}
+    and user_id = #{userId}
+  </select>
 
 
 
