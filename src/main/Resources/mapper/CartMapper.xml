@@ -175,5 +175,11 @@
   select nullif (sum(quantity),0) as  count from mmall_cart where
   user_id=#{userId}
 </select>
-
+  <select id="selectCheckedByUserId" parameterType="int" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"/>
+    from mmall_cart
+    where user_id=#{userId}
+    and checked=1
+  </select>
 </mapper>

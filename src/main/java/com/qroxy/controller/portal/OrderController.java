@@ -11,6 +11,7 @@ import com.qroxy.dao.OrderMapper;
 import com.qroxy.pojo.Order;
 import com.qroxy.pojo.User;
 import com.qroxy.service.IOrderService;
+import com.qroxy.vo.OrderVo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +41,94 @@ public class OrderController {
 
     private static final Logger logger = LoggerFactory.getLogger(OrderController.class);
 
+
+    /**
+     * @desc:创建订单接口
+     * @author:Qroxy
+     * @date:2018/10/18 3:40 PM
+     * @param:[session, orderNo, shippingId]
+     * @type:com.qroxy.common.ServerRespond
+     */
+    @RequestMapping("create.do")
+    @ResponseBody
+    public ServerRespond create(HttpSession session, Integer shippingId) {
+
+        User user = (User) session.getAttribute(Const.CURRENT_USER);
+        if (user == null) {
+            return ServerRespond.createByErrorMessage(ResponseCode.NEED_LOGIN.getCode(), ResponseCode.NEED_LOGIN.getDesc());
+        }
+
+        return iOrderService.create(user.getId(), shippingId);
+    }
+
+    /**
+     * @desc:取消订单接口
+     * @author:Qroxy
+     * @date:2018/10/18 3:53 PM
+     * @param:[session, orderNo]
+     * @type:com.qroxy.common.ServerRespond
+     */
+    @RequestMapping("cancle.do")
+    @ResponseBody
+    public ServerRespond cancle(HttpSession session, Long orderNo) {
+
+        User user = (User) session.getAttribute(Const.CURRENT_USER);
+        if (user == null) {
+            return ServerRespond.createByErrorMessage(ResponseCode.NEED_LOGIN.getCode(), ResponseCode.NEED_LOGIN.getDesc());
+        }
+
+        return iOrderService.cancle(user.getId(), orderNo);
+    }
+
+    /**
+     * @desc:查看购物车已经勾选的订单接口
+     * @author:Qroxy
+     * @date:2018/10/18 4:24 PM
+     * @param:[session]
+     * @type:com.qroxy.common.ServerRespond
+     */
+    @RequestMapping("get_order_cart_product.do")
+    @ResponseBody
+    public ServerRespond getOrderOart_product(HttpSession session) {
+
+        User user = (User) session.getAttribute(Const.CURRENT_USER);
+        if (user == null) {
+            return ServerRespond.createByErrorMessage(ResponseCode.NEED_LOGIN.getCode(), ResponseCode.NEED_LOGIN.getDesc());
+        }
+
+        return iOrderService.getOrderCartProduct(user.getId());
+    }
+
+    /**
+     * @desc:获取订单详情接口
+     * @author:Qroxy
+     * @date:2018/10/18 4:46 PM
+     * @param:[session, orderNo]
+     * @type:com.qroxy.common.ServerRespond
+     */
+    @RequestMapping("detail.do")
+    @ResponseBody
+    public ServerRespond getOrderDetatil(HttpSession session, long orderNo) {
+
+        User user = (User) session.getAttribute(Const.CURRENT_USER);
+        if (user == null) {
+            return ServerRespond.createByErrorMessage(ResponseCode.NEED_LOGIN.getCode(), ResponseCode.NEED_LOGIN.getDesc());
+        }
+
+        return iOrderService.getOrderDetatil(user.getId(), orderNo);
+    }
+
+    @RequestMapping("list.do")
+    @ResponseBody
+    public ServerRespond list(HttpSession session, @RequestParam(value = "pageNum", defaultValue = "1") Integer pageNum, @RequestParam(value = "pageSize", defaultValue = "10") Integer pageSize) {
+
+        User user = (User) session.getAttribute(Const.CURRENT_USER);
+        if (user == null) {
+            return ServerRespond.createByErrorMessage(ResponseCode.NEED_LOGIN.getCode(), ResponseCode.NEED_LOGIN.getDesc());
+        }
+
+        return iOrderService.getOrderlist(user.getId(), pageNum, pageSize);
+    }
     /**
      * @desc:支付宝支付接口
      * @author:Qroxy
